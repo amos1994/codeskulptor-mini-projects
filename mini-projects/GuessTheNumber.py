@@ -44,8 +44,8 @@ def range1000():
 
 def convert_to_integer(input_value):
 
-    choice = input_value.trim()
-    if choice.isdigit():
+    choice = str.strip(input_value)
+    if str.isdigit(choice):
         return (True, int(choice))
     else:
         return(False, 0)
@@ -58,34 +58,27 @@ def get_input(guess):
 
 
     #Process the input to get a valid input
-    (valid_input, input_integer) = convert_to_integer(guess)
-
-    valid_input = True
-    if __running_codeskulptor__:
-        input_number = int(guess)
-    else:
-        try:
-            input_number = int(guess)
-        except ValueError:
-            valid_input = False
-
+    (valid_input, input_number) = convert_to_integer(guess)
 
 
     print "Guess was [" + guess + "]"
 
-    #Update the current guess index
-    game_current_guess += 1
+    if valid_input:
+        #Update the current guess index
+        game_current_guess += 1
 
     #Display the number of guesses available.
     remaining_guesses = game_max_guesses - game_current_guess
     print "Number of remaining guesses is", remaining_guesses
 
+    if not valid_input:
+        print "*** Error: Invalid input. Try again :)"
+        print ""
+        return
 
-    #The boolean value to indicate if a new game should be started at the end.
-    start_new_game = False
 
     #Valid input and correct guess
-    if valid_input and input_number == game_secret_number: #Correct guess
+    if input_number == game_secret_number: #Correct guess
         print "Correct!\n"
         start_game(game_low_end, game_high_end)
         return
@@ -96,15 +89,10 @@ def get_input(guess):
         print "You ran out of guesses. The number was", game_secret_number, "\n"
         start_game(game_low_end, game_high_end)
         return
-
-    if not valid_input:
-        print "*** Error: Invalid input. Lost a chance"
     elif input_number < game_secret_number:
-        print "Higher!"
+        print "Higher!\n"
     else:
-        print "Lower!"
-
-    print ""
+        print "Lower!\n"
 
     return
 
@@ -160,12 +148,19 @@ range1000_button = frame.add_button("Range is [0, 1000)", range1000)
 
 input_value = frame.add_input("Enter a guess", get_input, 100)
 
-## start frame
-#frame.start()
-#
-##Assume the user has asked for range 0-100 game
-#range100()
 
+if __name__ == '__main__': #Condition will be true when code is run in CodeSkulptor
+
+    #Start the frame
+    frame.start()
+
+    #Start default game.
+    range100()
+
+
+# always remember to check your completed program against the grading rubric
+
+#The following piece of code is test runner code. It should be ignored by the reviewers.
 def __test__100_001():
     print "Test Range 100 - Invalid inputs or over the range"
 
@@ -179,6 +174,25 @@ def __test__100_001():
     get_input("A345")
     get_input("+456")
     get_input("Last Chance")
+    return
+
+
+def __test__100_002():
+    print "Test Range 100 - Valid Inputs to guess the number\n"
+
+    #Initialize the game
+    range100()
+
+    get_input("50")
+    get_input("50")
+    get_input("50")
+    get_input("50")
+    get_input("50")
+    get_input("50")
+    get_input("50")
+
+    return
+
 
 def __test__get_input():
     #get_input("200.0")
@@ -187,17 +201,9 @@ def __test__get_input():
     get_input("300")
 
 #The pretest module is loaded in the test runner
-if __name__!= '__main__':
+if __name__ != '__main__':
     __running_codeskulptor__ = False
     import pretest
     pretest.pretest(__name__, True)
-else:
 
-    #Exceptions aren't supported in CodeSkulptor
-    #Start the frame
-    frame.start()
 
-    #Start default game.
-    range100()
-
-# always remember to check your completed program against the grading rubric
